@@ -12,7 +12,7 @@
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
         padding: 20px;
@@ -105,6 +105,13 @@
         flex: 1;
       }
 
+      .search-form select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        flex: 1;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
@@ -159,12 +166,62 @@
           >➕ Add New Product</a
         >
 
+        <form th:action="@{/products}" method="get" class="search-form">
+          <input name="sortBy" type="hidden" th:value="${sortBy}" />
+          <input name="sortDir" type="hidden" th:value="${sortDir}" />
+
+          <select name="category" onchange="this.form.submit()">
+            <option value="">Filter By Categories</option>
+            <option
+              th:each="cat : ${categories}"
+              th:value="${cat}"
+              th:text="${cat}"
+              th:selected="${cat == selectedCategory}"
+            ></option>
+          </select>
+        </form>
+
         <form th:action="@{/products/search}" method="get" class="search-form">
           <input
             type="text"
             name="keyword"
             th:value="${keyword}"
             placeholder="Search products..."
+          />
+          <button type="submit" class="btn btn-primary">🔍 Search</button>
+        </form>
+
+        <form
+          th:action="@{/products/advanced-search}"
+          method="get"
+          class="search-form"
+        >
+          <input
+            type="text"
+            name="name"
+            th:value="${name}"
+            placeholder="Name..."
+          />
+          <select name="category" id="category" th:value="${category}">
+            <option value="">All Categories</option>
+            <option
+              th:each="cat : ${categories}"
+              th:value="${cat}"
+              th:text="${cat}"
+              th:selected="${cat == selectedCategory}"
+            ></option>
+          </select>
+          <input
+            type="number"
+            name="minPrice"
+            th:value="${minPrice}"
+            placeholder="MinPrice ..."
+          />
+          <input
+            type="number"
+            name="maxPrice"
+            th:value="${maxPrice}"
+            placeholder="MaxPrice ..."
           />
           <button type="submit" class="btn btn-primary">🔍 Search</button>
         </form>
@@ -175,12 +232,78 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Category</th>
+              <th>
+                <a
+                  th:href="@{/products(sortBy='id',sortDir=${sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}"
+                >
+                  Id
+                  <span
+                    th:if="${sortBy=='id'}"
+                    th:text="${sortDir=='asc'?'↑':'↓'}"
+                  ></span>
+                </a>
+              </th>
+
+              <th>
+                <a
+                  th:href="@{/products(sortBy='productCode',sortDir=${sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}"
+                >
+                  Code
+                  <span
+                    th:if="${sortBy=='productCode'}"
+                    th:text="${sortDir=='asc'?'↑':'↓'}"
+                  ></span>
+                </a>
+              </th>
+
+              <th>
+                <a
+                  th:href="@{/products(sortBy='name',sortDir=${sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}"
+                >
+                  Name
+                  <span
+                    th:if="${sortBy=='name'}"
+                    th:text="${sortDir=='asc'?'↑':'↓'}"
+                  ></span>
+                </a>
+              </th>
+
+              <th>
+                <a
+                  th:href="@{/products(sortBy='price',sortDir=${sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}"
+                >
+                  Price
+                  <span
+                    th:if="${sortBy=='price'}"
+                    th:text="${sortDir=='asc'?'↑':'↓'}"
+                  ></span>
+                </a>
+              </th>
+
+              <th>
+                <a
+                  th:href="@{/products(sortBy='quantity',sortDir=${sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}"
+                >
+                  Quantity
+                  <span
+                    th:if="${sortBy=='quantity'}"
+                    th:text="${sortDir=='asc'?'↑':'↓'}"
+                  ></span>
+                </a>
+              </th>
+
+              <th>
+                <a
+                  th:href="@{/products(sortBy='category',sortDir=${sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}"
+                >
+                  Category
+                  <span
+                    th:if="${sortBy=='category'}"
+                    th:text="${sortDir=='asc'?'↑':'↓'}"
+                  ></span>
+                </a>
+              </th>
+
               <th>Actions</th>
             </tr>
           </thead>
