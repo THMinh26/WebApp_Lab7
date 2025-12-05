@@ -162,6 +162,7 @@ public class ProductController {
 
         List<String> categories = productService.findAllCategories();
         model.addAttribute("categories", categories);
+        model.addAttribute("keyword", keyword);
 
         return "product-list";
     }
